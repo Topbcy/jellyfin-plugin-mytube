@@ -2,12 +2,12 @@ using System.Collections.Specialized;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Web;
-using Jellyfin.Plugin.MetaTube.Metadata;
+using Jellyfin.Plugin.MyTube.Metadata;
 #if __EMBY__
 using MediaBrowser.Common.Net;
 #endif
 
-namespace Jellyfin.Plugin.MetaTube;
+namespace Jellyfin.Plugin.MyTube;
 
 public static class ApiClient
 {
