@@ -1,5 +1,5 @@
-using Jellyfin.Plugin.MetaTube.Helpers;
-using Jellyfin.Plugin.MetaTube.Translation;
+using Jellyfin.Plugin.MyTube.Helpers;
+using Jellyfin.Plugin.MyTube.Translation;
 #if __EMBY__
 using System.ComponentModel;
 using Emby.Web.GenericEdit;
@@ -9,7 +9,7 @@ using MediaBrowser.Model.Attributes;
 using MediaBrowser.Model.Plugins;
 #endif
 
-namespace Jellyfin.Plugin.MetaTube.Configuration;
+namespace Jellyfin.Plugin.MyTube.Configuration;
 
 #if __EMBY__
 public class PluginConfiguration : EditableOptionsBase
@@ -22,14 +22,14 @@ public class PluginConfiguration : BasePluginConfiguration
 
 #if __EMBY__
     [DisplayName("Server")]
-    [Description("Full url of the MetaTube Server, HTTPS protocol is recommended.")]
+    [Description("Full url of the MyTube Server, HTTPS protocol is recommended.")]
     [Required]
 #endif
     public string Server { get; set; } = string.Empty;
 
 #if __EMBY__
     [DisplayName("Token")]
-    [Description("Access token for the MetaTube Server, or blank if no token is set by the backend.")]
+    [Description("Access token for the MyTube Server, or blank if no token is set by the backend.")]
 #endif
     public string Token { get; set; } = string.Empty;
 
