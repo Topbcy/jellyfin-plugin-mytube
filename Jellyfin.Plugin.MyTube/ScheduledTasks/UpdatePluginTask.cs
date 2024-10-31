@@ -2,7 +2,7 @@
 using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Jellyfin.Plugin.MetaTube.Extensions;
+using Jellyfin.Plugin.MyTube.Extensions;
 using MediaBrowser.Common;
 using MediaBrowser.Common.Configuration;
 using MediaBrowser.Common.Net;
@@ -11,7 +11,7 @@ using MediaBrowser.Model.Logging;
 using MediaBrowser.Model.Tasks;
 using HttpRequestOptions = MediaBrowser.Common.Net.HttpRequestOptions;
 
-namespace Jellyfin.Plugin.MetaTube.ScheduledTasks;
+namespace Jellyfin.Plugin.MyTube.ScheduledTasks;
 
 public class UpdatePluginTask : IScheduledTask
 {
