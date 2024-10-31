@@ -12,7 +12,7 @@
         "checksum": "19ac5febbe22b21eacdb3dde3a588c89",
         "changelog": "Auto Released by Actions",
         "targetAbi": "10.10.0.0",
-        "sourceUrl": "https://github.com/Topbcy/jellyfin-plugin-mytube/releases/download/v2024.1010.1541.0/MyTube_2024.1010.1541.0.zip",
+        "sourceUrl": "https://github.com/Topbcy/jellyfin-plugin-mytube/releases/download/v2024.1010.1541.0/Jellyfin.MyTube_2024.1010.1541.0.zip",
         "timestamp": "2024-10-31T02:00:35Z",
         "version": "2024.1010.1541.0"
       },
@@ -20,7 +20,7 @@
         "checksum": "19ac5febbe22b21eacdb3dde3a588c89",
         "changelog": "Auto Released by Actions",
         "targetAbi": "10.9.0.0",
-        "sourceUrl": "https://github.com/Topbcy/jellyfin-plugin-mytube/releases/download/v2024.1010.1541.0/MyTube_2024.1010.1541.0.zip",
+        "sourceUrl": "https://github.com/Topbcy/jellyfin-plugin-mytube/releases/download/v2024.1010.1541.0/Jellyfin.MyTube_2024.1010.1541.0.zip",
         "timestamp": "2024-10-10T02:00:35Z",
         "version": "2024.1010.1541.0"
       }
