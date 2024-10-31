@@ -1,6 +1,6 @@
 using System.ComponentModel;
 
-namespace Jellyfin.Plugin.MetaTube.Translation;
+namespace Jellyfin.Plugin.MyTube.Translation;
 
 public enum TranslationMode
 {
