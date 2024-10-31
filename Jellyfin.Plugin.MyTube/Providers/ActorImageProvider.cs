@@ -1,4 +1,4 @@
-using Jellyfin.Plugin.MetaTube.Extensions;
+using Jellyfin.Plugin.MyTube.Extensions;
 using MediaBrowser.Controller.Entities;
 using MediaBrowser.Controller.Providers;
 using MediaBrowser.Model.Entities;
@@ -11,7 +11,7 @@ using MediaBrowser.Model.Configuration;
 using Microsoft.Extensions.Logging;
 #endif
 
-namespace Jellyfin.Plugin.MetaTube.Providers;
+namespace Jellyfin.Plugin.MyTube.Providers;
 
 public class ActorImageProvider : BaseProvider, IRemoteImageProvider, IHasOrder
 {
