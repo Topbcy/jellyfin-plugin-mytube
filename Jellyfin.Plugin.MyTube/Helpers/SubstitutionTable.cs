@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace Jellyfin.Plugin.MetaTube.Helpers;
+namespace Jellyfin.Plugin.MyTube.Helpers;
 
 public class SubstitutionTable : Dictionary<string, string>
 {
