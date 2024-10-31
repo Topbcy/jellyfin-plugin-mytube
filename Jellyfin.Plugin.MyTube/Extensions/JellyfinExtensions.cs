@@ -4,7 +4,7 @@
 using MediaBrowser.Controller.Entities.Movies;
 using Microsoft.Extensions.Logging;
 
-namespace Jellyfin.Plugin.MetaTube.Extensions;
+namespace Jellyfin.Plugin.MyTube.Extensions;
 
 public static class JellyfinExtensions
 {
