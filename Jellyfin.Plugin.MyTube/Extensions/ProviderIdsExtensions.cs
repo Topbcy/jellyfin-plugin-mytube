@@ -1,8 +1,8 @@
 using System.Web;
-using Jellyfin.Plugin.MetaTube.Helpers;
+using Jellyfin.Plugin.MyTube.Helpers;
 using MediaBrowser.Model.Entities;
 
-namespace Jellyfin.Plugin.MetaTube.Extensions;
+namespace Jellyfin.Plugin.MyTube.Extensions;
 
 public static class ProviderIdsExtensions
 {
