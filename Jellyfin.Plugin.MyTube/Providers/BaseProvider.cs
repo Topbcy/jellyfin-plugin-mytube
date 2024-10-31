@@ -1,14 +1,14 @@
-using Jellyfin.Plugin.MetaTube.Configuration;
+using Jellyfin.Plugin.MyTube.Configuration;
 #if __EMBY__
 using MediaBrowser.Common.Net;
 using MediaBrowser.Model.Logging;
 
 #else
 using Microsoft.Extensions.Logging;
-using Jellyfin.Plugin.MetaTube.Extensions;
+using Jellyfin.Plugin.MyTube.Extensions;
 #endif
 
-namespace Jellyfin.Plugin.MetaTube.Providers;
+namespace Jellyfin.Plugin.MyTube.Providers;
 
 public abstract class BaseProvider
 {
