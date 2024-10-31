@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Jellyfin.Plugin.MetaTube.Metadata;
+namespace Jellyfin.Plugin.MyTube.Metadata;
 
 public class ResponseInfo<T>
 {
