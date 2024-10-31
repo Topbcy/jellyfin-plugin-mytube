@@ -1,5 +1,5 @@
-using Jellyfin.Plugin.MetaTube.Extensions;
-using Jellyfin.Plugin.MetaTube.Metadata;
+using Jellyfin.Plugin.MyTube.Extensions;
+using Jellyfin.Plugin.MyTube.Metadata;
 using MediaBrowser.Controller.Entities;
 using MediaBrowser.Controller.Providers;
 using MediaBrowser.Model.Providers;
@@ -10,7 +10,7 @@ using MediaBrowser.Model.Logging;
 using Microsoft.Extensions.Logging;
 #endif
 
-namespace Jellyfin.Plugin.MetaTube.Providers;
+namespace Jellyfin.Plugin.MyTube.Providers;
 
 public class ActorProvider : BaseProvider, IRemoteMetadataProvider<Person, PersonLookupInfo>, IHasOrder
 {
