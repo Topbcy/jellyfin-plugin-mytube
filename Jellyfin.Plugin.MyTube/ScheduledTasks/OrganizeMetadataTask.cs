@@ -1,5 +1,5 @@
 using System.Text.RegularExpressions;
-using Jellyfin.Plugin.MetaTube.Extensions;
+using Jellyfin.Plugin.MyTube.Extensions;
 using MediaBrowser.Controller.Entities;
 using MediaBrowser.Controller.Library;
 using MediaBrowser.Model.Entities;
@@ -14,7 +14,7 @@ using Microsoft.Extensions.Logging;
 using Jellyfin.Data.Enums;
 #endif
 
-namespace Jellyfin.Plugin.MetaTube.ScheduledTasks;
+namespace Jellyfin.Plugin.MyTube.ScheduledTasks;
 
 public class OrganizeMetadataTask : IScheduledTask
 {
