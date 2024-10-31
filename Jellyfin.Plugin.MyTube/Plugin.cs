@@ -1,4 +1,4 @@
-using Jellyfin.Plugin.MetaTube.Configuration;
+using Jellyfin.Plugin.MyTube.Configuration;
 using MediaBrowser.Common.Plugins;
 #if __EMBY__
 using MediaBrowser.Common;
@@ -11,7 +11,7 @@ using MediaBrowser.Model.Serialization;
 using MediaBrowser.Common.Configuration;
 #endif
 
-namespace Jellyfin.Plugin.MetaTube;
+namespace Jellyfin.Plugin.MyTube;
 
 #if __EMBY__
 public class Plugin : BasePluginSimpleUI<PluginConfiguration>, IHasThumbImage
@@ -30,9 +30,9 @@ public class Plugin : BasePlugin<PluginConfiguration>, IHasWebPages
     }
 #endif
 
-    public override string Name => "MetaTube";
+    public override string Name => "MyTube";
 
-    public override string Description => "MetaTube Plugin for Jellyfin/Emby";
+    public override string Description => "MyTube Plugin for Jellyfin/Emby";
 
     public override Guid Id => Guid.Parse("01cc53ec-c415-4108-bbd4-a684a9801a32");
 
