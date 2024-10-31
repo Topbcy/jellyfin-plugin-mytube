@@ -1,8 +1,8 @@
 using System.Collections.Specialized;
-using Jellyfin.Plugin.MetaTube.Configuration;
-using Jellyfin.Plugin.MetaTube.Metadata;
+using Jellyfin.Plugin.MyTube.Configuration;
+using Jellyfin.Plugin.MyTube.Metadata;
 
-namespace Jellyfin.Plugin.MetaTube.Translation;
+namespace Jellyfin.Plugin.MyTube.Translation;
 
 public static class TranslationHelper
 {
