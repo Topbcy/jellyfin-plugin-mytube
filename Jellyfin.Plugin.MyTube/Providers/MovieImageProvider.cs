@@ -1,4 +1,4 @@
-using Jellyfin.Plugin.MetaTube.Extensions;
+using Jellyfin.Plugin.MyTube.Extensions;
 using MediaBrowser.Controller.Entities;
 using MediaBrowser.Controller.Entities.Movies;
 using MediaBrowser.Controller.Providers;
@@ -12,7 +12,7 @@ using MediaBrowser.Model.Logging;
 using Microsoft.Extensions.Logging;
 #endif
 
-namespace Jellyfin.Plugin.MetaTube.Providers;
+namespace Jellyfin.Plugin.MyTube.Providers;
 
 public class MovieImageProvider : BaseProvider, IRemoteImageProvider, IHasOrder
 {
