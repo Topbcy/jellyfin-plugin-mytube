@@ -4,7 +4,7 @@ using MediaBrowser.Model.Entities;
 using MediaBrowser.Model.Providers;
 #endif
 
-namespace Jellyfin.Plugin.MetaTube.ExternalIds;
+namespace Jellyfin.Plugin.MyTube.ExternalIds;
 
 public class ActorExternalId : BaseExternalId
 {
