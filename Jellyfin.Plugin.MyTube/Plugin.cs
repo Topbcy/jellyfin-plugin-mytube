@@ -34,7 +34,7 @@ public class Plugin : BasePlugin<PluginConfiguration>, IHasWebPages
 
     public override string Description => "MyTube Plugin for Jellyfin/Emby";
 
-    public override Guid Id => Guid.Parse("01cc53ec-c415-4108-bbd4-a684a9801a32");
+    public override Guid Id => Guid.Parse("2e18517c-b8d9-4117-a937-ce61d9ce3d87");
 
     public static Plugin Instance { get; private set; }
 
