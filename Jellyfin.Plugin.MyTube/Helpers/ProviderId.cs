@@ -1,4 +1,4 @@
-namespace Jellyfin.Plugin.MetaTube.Helpers;
+namespace Jellyfin.Plugin.MyTube.Helpers;
 
 public class ProviderId
 {
