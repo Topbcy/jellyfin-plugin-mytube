@@ -1,8 +1,8 @@
 using System.Text;
-using Jellyfin.Plugin.MetaTube.Configuration;
-using Jellyfin.Plugin.MetaTube.Extensions;
-using Jellyfin.Plugin.MetaTube.Metadata;
-using Jellyfin.Plugin.MetaTube.Translation;
+using Jellyfin.Plugin.MyTube.Configuration;
+using Jellyfin.Plugin.MyTube.Extensions;
+using Jellyfin.Plugin.MyTube.Metadata;
+using Jellyfin.Plugin.MyTube.Translation;
 using MediaBrowser.Controller.Entities;
 using MediaBrowser.Controller.Entities.Movies;
 using MediaBrowser.Controller.Providers;
@@ -17,7 +17,7 @@ using Jellyfin.Data.Enums;
 using Microsoft.Extensions.Logging;
 #endif
 
-namespace Jellyfin.Plugin.MetaTube.Providers;
+namespace Jellyfin.Plugin.MyTube.Providers;
 
 public class MovieProvider : BaseProvider, IRemoteMetadataProvider<Movie, MovieInfo>, IHasOrder
 {
