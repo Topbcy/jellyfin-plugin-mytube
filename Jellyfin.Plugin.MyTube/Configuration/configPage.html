@@ -2,21 +2,21 @@
 <html lang="en">
 
 <head>
-    <title>MetaTube</title>
+    <title>MyTube</title>
 </head>
 
 <body>
-<div class="page type-interior pluginConfigurationPage MetaTubeConfigurationPage" data-require="emby-input,emby-button,emby-select,emby-checkbox,emby-linkbutton" data-role="page">
+<div class="page type-interior pluginConfigurationPage MyTubeConfigurationPage" data-require="emby-input,emby-button,emby-select,emby-checkbox,emby-linkbutton" data-role="page">
     <div data-role="content">
         <div class="content-primary">
 
-            <h1>MetaTube</h1>
+            <h1>MyTube</h1>
 
             <div class="readOnlyContent">
-                <p class="description1">MetaTube Plugin for Jellyfin/Emby. <a class="button-link emby-button" href="https://metatube-community.github.io" is="emby-linkbutton" target="_blank">Learn more</a>.</p>
+                <p class="description1">MyTube Plugin for Jellyfin/Emby. <a class="button-link emby-button" href="https://metatube-community.github.io" is="emby-linkbutton" target="_blank">Learn more</a>.</p>
             </div>
 
-            <form class="MetaTubeConfigurationForm">
+            <form class="MyTubeConfigurationForm">
 
                 <div class="verticalSection">
                     <h2>General</h2>
@@ -25,13 +25,13 @@
                         <label class="inputLabel inputLabelUnfocused" for="txtServer">Server:</label>
                         <input id="txtServer" is="emby-input" name="txtServer" pattern="^https?://.+$" required
                                type="text"/>
-                        <div class="fieldDescription">Full url of the MetaTube Server, HTTPS protocol is recommended.</div>
+                        <div class="fieldDescription">Full url of the MyTube Server, HTTPS protocol is recommended.</div>
                     </div>
 
                     <div class="inputContainer">
                         <label class="inputLabel inputLabelUnfocused" for="txtToken">Token:</label>
                         <input id="txtToken" is="emby-input" name="txtToken" type="text"/>
-                        <div class="fieldDescription">Access token for the MetaTube Server, or blank if no token is set by the backend.</div>
+                        <div class="fieldDescription">Access token for the MyTube Server, or blank if no token is set by the backend.</div>
                     </div>
 
                     <div class="checkboxContainer checkboxContainer-withDescription">
@@ -271,7 +271,7 @@
         </div>
     </div>
     <script type="text/javascript">
-        var MetaTubePluginConfig = {
+        var MyTubePluginConfig = {
             pluginUniqueId: "01cc53ec-c415-4108-bbd4-a684a9801a32"
         };
 
@@ -317,10 +317,10 @@
             }
         });
 
-        $('.MetaTubeConfigurationPage').on('pageshow', function () {
+        $('.MyTubeConfigurationPage').on('pageshow', function () {
             Dashboard.showLoadingMsg();
             var page = this;
-            ApiClient.getPluginConfiguration(MetaTubePluginConfig.pluginUniqueId).then(function (config) {
+            ApiClient.getPluginConfiguration(MyTubePluginConfig.pluginUniqueId).then(function (config) {
                 $('#txtServer', page).val(config.Server).change();
                 $('#txtToken', page).val(config.Token).change();
                 page.querySelector('#chkEnableCollections').checked = config.EnableCollections;
@@ -354,10 +354,10 @@
             });
         });
 
-        $('.MetaTubeConfigurationForm').on('submit', function () {
+        $('.MyTubeConfigurationForm').on('submit', function () {
             Dashboard.showLoadingMsg();
             var form = this;
-            ApiClient.getPluginConfiguration(MetaTubePluginConfig.pluginUniqueId).then(function (config) {
+            ApiClient.getPluginConfiguration(MyTubePluginConfig.pluginUniqueId).then(function (config) {
                 config.Server = $('#txtServer', form).val();
                 config.Token = $('#txtToken', form).val();
                 config.EnableCollections = $('#chkEnableCollections', form).prop('checked');
@@ -387,7 +387,7 @@
                 config.ActorRawSubstitutionTable = $('#txtActorRawSubstitutionTable', form).val();
                 config.EnableGenreSubstitution = $('#chkEnableGenreSubstitution', form).prop('checked');
                 config.GenreRawSubstitutionTable = $('#txtGenreRawSubstitutionTable', form).val();
-                ApiClient.updatePluginConfiguration(MetaTubePluginConfig.pluginUniqueId, config).then(Dashboard.processPluginConfigurationUpdateResult);
+                ApiClient.updatePluginConfiguration(MyTubePluginConfig.pluginUniqueId, config).then(Dashboard.processPluginConfigurationUpdateResult);
             });
             // Disable default form submission
             return false;
