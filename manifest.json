@@ -10,14 +10,14 @@
     "versions": [
       {
         "changelog": "Auto Released by Actions",
-        "targetAbi": "10.10.0.0",
+        "targetAbi": "10.9.0.0",
         "sourceUrl": "https://github.com/Topbcy/jellyfin-plugin-mytube/releases/download/v2024.1031.844.0/Jellyfin.MyTube@v2024.1031.844.0.zip",
         "timestamp": "2024-10-31T02:00:35Z",
         "version": "2024.1031.844.0"
       },
       {
         "changelog": "Auto Released by Actions",
-        "targetAbi": "10.9.0.0",
+        "targetAbi": "10.8.0.0",
         "sourceUrl": "https://github.com/Topbcy/jellyfin-plugin-mytube/releases/download/v2024.1010.1541.0/Jellyfin.MyTube_2024.1010.1541.0.zip",
         "timestamp": "2024-10-10T02:00:35Z",
         "version": "2024.1010.1541.0"
