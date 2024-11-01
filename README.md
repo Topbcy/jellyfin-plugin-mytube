@@ -7,13 +7,28 @@
 <img alt="Releases" src="https://img.shields.io/github/v/release/Topbcy/jellyfin-plugin-mytube?include_prereleases&logo=smartthings">
 </a> 
 </p>
-Forked From Jellyfin-Plugin-Metatube</br>
-https://github.com/metatube-community/jellyfin-plugin-metatube</br>
-<br>Purpose: To add a second plugin, enabling two plugins with different configuration settings.<br>
 
-<br>Jellyfin
-<br> 1. Go to Jellyfin Control Panel > Plugin Directory/Repositories > Settings, and add:
+Forked From [Jellyfin-Plugin-Metatube](https://github.com/metatube-community/jellyfin-plugin-metatube)
+
+## Features
+To add a second plugin, enabling two plugins with different configuration settings.<br>
+
+## Installation
+- Jellyfin
+<br> 1. Go to Jellyfin Control Panel > Plugin Catalog/Repositories > Settings, and add:
 <br> 2. Repository Name: MyTube
 <br> 3. Repository URL: https://raw.githubusercontent.com/Topbcy/jellyfin-plugin-mytube/refs/heads/main/manifest.json
 <br> 4. Find "MyTube" under the plugin directory and click Install.
-<br> 5. Restart Jellyfin
+<br> 5. Restart the Jellyfin.</br></br>
+- Emby
+<br> 1. Download the latest MyTube plugin from "Releases"
+<br> 2. Extract the MyTube.dll file.
+<br> 3. Copy the dll file into the Emby plugins directory.
+<br> 4. Restart the Emby.
+<br> Note: Future plugin updates for Emby will be automatically handled in the background via scheduled tasks.
+
+
+## Platforms
+[![Jellyfin](https://img.shields.io/static/v1?color=%2300A4DC&style=for-the-badge&label=Jellyfin&logo=jellyfin&message=10.10.x)](https://jellyfin.org/)
+[![Emby](https://img.shields.io/static/v1?color=%2352B54B&style=for-the-badge&label=Emby&logo=emby&message=4.8.x)](https://emby.media/)
+<br>_NOTE: This project will only support stable versions._
