@@ -8,7 +8,9 @@
 </a> 
 </p>
 
-Forked From [Jellyfin-Plugin-Metatube](https://github.com/metatube-community/jellyfin-plugin-metatube)
+## About
+Built on top of [Jellyfin-Plugin-Metatube](https://github.com/metatube-community/jellyfin-plugin-metatube)
+<br>Original Author [Metatube-community](https://github.com/metatube-community)
 
 ## Features
 To add a second plugin, enabling two plugins with different configuration settings.<br>
