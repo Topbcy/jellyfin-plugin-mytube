@@ -1,5 +1,5 @@
 # Jellyfin-Plugin-MyTube
-Forked From jellyfin-plugin-metatube
+Forked From Jellyfin-Plugin-Metatube
 https://github.com/metatube-community/jellyfin-plugin-metatube
 
 應用目的:新增第二組插件，從而達到兩種不同設定條件的插件
