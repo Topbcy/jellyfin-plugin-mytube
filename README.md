@@ -34,3 +34,7 @@ To add a second plugin, enabling two plugins with different configuration settin
 [![Jellyfin](https://img.shields.io/static/v1?color=%2300A4DC&style=for-the-badge&label=Jellyfin&logo=jellyfin&message=10.10.x)](https://jellyfin.org/)
 [![Emby](https://img.shields.io/static/v1?color=%2352B54B&style=for-the-badge&label=Emby&logo=emby&message=4.8.x)](https://emby.media/)
 <br>_NOTE: This project will only support stable versions._
+
+
+## Acknowledgments
+Special thanks to [xjasonlyu](https://github.com/xjasonlyu) for the [original jellyfin-plugin-metatube project](https://github.com/metatube-community/jellyfin-plugin-metatube), which serves as the foundation for this project.
