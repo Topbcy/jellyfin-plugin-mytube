@@ -28,7 +28,7 @@ To add a second plugin, enabling two plugins with different configuration settin
 <br> 2. Extract the MyTube.dll file.
 <br> 3. Copy the dll file into the Emby plugins directory.
 <br> 4. Restart the Emby.
-<br> Note: Future plugin updates for Emby will be automatically handled in the background via scheduled tasks.
+<br>_Note: Future plugin updates for Emby will be automatically handled in the background via scheduled tasks._
 
 
 ## Platforms
