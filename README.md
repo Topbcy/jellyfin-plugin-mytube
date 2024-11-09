@@ -1,4 +1,6 @@
 <h1 align="center">Jellyfin Plugin MyTube</h1>
+<p align="center">
+<img alt="Plugin Banner" src="https://github.com/Topbcy/jellyfin-plugin-mytube/blob/main/banner.png?raw=true"/>
 <p align="center"><b>English | <a href="README_ZH.md">中文</a></b></p>
 <p align="center">
 <a href="https://github.com/Topbcy/jellyfin-plugin-mytube">
