@@ -9,32 +9,33 @@
 </a> 
 </p>
 
-## About
-Built on top of [Jellyfin-Plugin-Metatube](https://github.com/metatube-community/jellyfin-plugin-metatube)
-<br>Original Author [Metatube-community](https://github.com/metatube-community)
+## 關於
+基於 [Jellyfin-Plugin-Metatube](https://github.com/metatube-community/jellyfin-plugin-metatube)
+<br>原作者 [Metatube-community](https://github.com/metatube-community)
 
-## Features
-To add a second plugin, enabling two plugins with different configuration settings.<br>
+## 功能
+新增第二個 Metatube 插件，允許使用不同配置刮削。<br>
+例如無碼一組、有碼一組，可增加刮削效率。<br>
 
-## Installation
+## 安裝
 - Jellyfin
-<br> 1. Go to Jellyfin Control Panel > Plugin Catalog/Repositories > Settings, and add:
-<br> 2. Repository Name: MyTube
-<br> 3. Repository URL: https://raw.githubusercontent.com/Topbcy/jellyfin-plugin-mytube/refs/heads/main/manifest.json
-<br> 4. Find "MyTube" under the plugin directory and click Install.
-<br> 5. Restart the Jellyfin.</br></br>
+<br> 1. 進入 Jellyfin 控制台 > 擴充功能/目錄 > 設定/儲存庫 , 新增:
+<br> 2. 資源庫名稱: MyTube
+<br> 3. 資源庫網址: https://raw.githubusercontent.com/Topbcy/jellyfin-plugin-mytube/refs/heads/main/manifest.json
+<br> 4. 找到 "MyTube" 擴充功能/目錄，點擊 "安裝"
+<br> 5. 重啟 Jellyfin</br></br>
 - Emby
-<br> 1. Download the latest MyTube plugin from "Releases"
-<br> 2. Extract the MyTube.dll file.
-<br> 3. Copy the dll file into the Emby plugins directory.
-<br> 4. Restart the Emby.
-<br> Note: Future plugin updates for Emby will be automatically handled in the background via scheduled tasks.
+<br> 1. 從 "Releases" 下載最新 MyTube
+<br> 2. 解壓縮 MyTube.dll 檔案
+<br> 3. 將 MyTube.dll 檔案複製到 Emby 的插件目錄中
+<br> 4. 重啟 Emby.
+<br>_注意：未來的 Emby 插件更新將通過排程任務在背景自動處理。_
 
 
-## Platforms
+## 平台
 [![Jellyfin](https://img.shields.io/static/v1?color=%2300A4DC&style=for-the-badge&label=Jellyfin&logo=jellyfin&message=10.10.x)](https://jellyfin.org/)
 [![Emby](https://img.shields.io/static/v1?color=%2352B54B&style=for-the-badge&label=Emby&logo=emby&message=4.8.x)](https://emby.media/)
-<br>_NOTE: This project will only support stable versions._
+<br>_注意：此專案僅支援穩定版本。_
 
 
 ## Acknowledgments
