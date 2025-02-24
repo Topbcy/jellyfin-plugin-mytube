@@ -6,11 +6,12 @@ using Jellyfin.Plugin.MyTube.Translation;
 using MediaBrowser.Controller.Entities;
 using MediaBrowser.Controller.Entities.Movies;
 using MediaBrowser.Controller.Providers;
-using MediaBrowser.Model.Entities;
 using MediaBrowser.Model.Providers;
 using MovieInfo = MediaBrowser.Controller.Providers.MovieInfo;
 #if __EMBY__
 using MediaBrowser.Model.Logging;
+using MediaBrowser.Model.Configuration;
+using MediaBrowser.Model.Entities;
 
 #else
 using Jellyfin.Data.Enums;
@@ -19,7 +20,11 @@ using Microsoft.Extensions.Logging;
 
 namespace Jellyfin.Plugin.MyTube.Providers;
 
+#if __EMBY__
+public class MovieProvider : BaseProvider, IRemoteMetadataProvider<Movie, MovieInfo>, IHasOrder, IHasMetadataFeatures
+#else
 public class MovieProvider : BaseProvider, IRemoteMetadataProvider<Movie, MovieInfo>, IHasOrder
+#endif
 {
     private const string AvBase = "AVBASE";
     private const string Gfriends = "Gfriends";
@@ -28,6 +33,9 @@ public class MovieProvider : BaseProvider, IRemoteMetadataProvider<Movie, MovieI
     private static readonly string[] AvBaseSupportedProviderNames = { "DUGA", "FANZA", "Getchu", "MGS" };
 
 #if __EMBY__
+    public MetadataFeatures[] Features => new[]
+        { MetadataFeatures.Collections, MetadataFeatures.Adult, MetadataFeatures.RequiredSetup };
+
     public MovieProvider(ILogManager logManager) : base(logManager.CreateLogger<MovieProvider>())
 #else
     public MovieProvider(ILogger<MovieProvider> logger) : base(logger)
@@ -135,7 +143,11 @@ public class MovieProvider : BaseProvider, IRemoteMetadataProvider<Movie, MovieI
 
         // Add collection.
         if (Configuration.EnableCollections && !string.IsNullOrWhiteSpace(m.Series))
+        {
             result.Item.AddCollection(m.Series);
+            Logger.Info("Add Collection for movie {0} [{1}]", pid.ToString(), m.Series);
+        }
+
 
         // Add studio.
         if (!string.IsNullOrWhiteSpace(m.Maker))
