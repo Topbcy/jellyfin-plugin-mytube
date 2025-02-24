@@ -3,7 +3,7 @@
 using System.Text;
 using MediaBrowser.Model.Logging;
 
-namespace Jellyfin.Plugin.MetaTube.Extensions;
+namespace Jellyfin.Plugin.MyTube.Extensions;
 
 public static class EmbyExtensions
 {
