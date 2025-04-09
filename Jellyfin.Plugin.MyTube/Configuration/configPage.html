@@ -204,6 +204,11 @@
                                 <input id="txtDeepLApiKey" is="emby-input" name="txtDeepLApiKey" type="text"/>
                                 <div class="fieldDescription"></div>
                             </div>
+                            <div class="inputContainer">
+                                <label class="inputLabel inputLabelUnfocused" for="txtDeepLApiUrl">DeepL api url:</label>
+                                <input id="txtDeepLApiUrl" is="emby-input" name="txtDeepLApiUrl" type="text"/>
+                                <div class="fieldDescription">Custom DeepL-compatible api url. (optional)</div>
+                            </div>
                         </div>
 
                         <div class="selectTranslationEngineOpenAi">
@@ -211,6 +216,16 @@
                                 <label class="inputLabel inputLabelUnfocused" for="txtOpenAiApiKey">OpenAI api key:</label>
                                 <input id="txtOpenAiApiKey" is="emby-input" name="txtOpenAiApiKey" type="text"/>
                                 <div class="fieldDescription"></div>
+                            </div>
+                            <div class="inputContainer">
+                                <label class="inputLabel inputLabelUnfocused" for="txtOpenAiApiUrl">OpenAI api url:</label>
+                                <input id="txtOpenAiApiUrl" is="emby-input" name="txtOpenAiApiUrl" type="text"/>
+                                <div class="fieldDescription">Custom OpenAI-compatible api url. (optional)</div>
+                            </div>
+                            <div class="inputContainer">
+                                <label class="inputLabel inputLabelUnfocused" for="txtOpenAiModel">OpenAI model:</label>
+                                <input id="txtOpenAiModel" is="emby-input" name="txtOpenAiModel" type="text"/>
+                                <div class="fieldDescription">Custom OpenAI-compatible api model. (optional)</div>
                             </div>
                         </div>
                     </div>
@@ -343,7 +358,10 @@
                 $('#txtBaiduAppKey', page).val(config.BaiduAppKey).change();
                 $('#txtGoogleApiKey', page).val(config.GoogleApiKey).change();
                 $('#txtDeepLApiKey', page).val(config.DeepLApiKey).change();
+                $('#txtDeepLApiUrl', page).val(config.DeepLApiUrl).change();
                 $('#txtOpenAiApiKey', page).val(config.OpenAiApiKey).change();
+                $('#txtOpenAiApiUrl', page).val(config.OpenAiApiUrl).change();
+                $('#txtOpenAiModel', page).val(config.OpenAiModel).change();
                 page.querySelector('#chkEnableTitleSubstitution').checked = config.EnableTitleSubstitution;
                 $('#txtTitleRawSubstitutionTable', page).val(config.TitleRawSubstitutionTable).change();
                 page.querySelector('#chkEnableActorSubstitution').checked = config.EnableActorSubstitution;
@@ -380,7 +398,10 @@
                 config.BaiduAppKey = $('#txtBaiduAppKey', form).val();
                 config.GoogleApiKey = $('#txtGoogleApiKey', form).val();
                 config.DeepLApiKey = $('#txtDeepLApiKey', form).val();
+                config.DeepLXAltUrl = $('#txtDeepLApiUrl', form).val();
                 config.OpenAiApiKey = $('#txtOpenAiApiKey', form).val();
+                config.OpenAiApiUrl = $('#txtOpenAiApiUrl', form).val();
+                config.OpenAiModel = $('#txtOpenAiModel', form).val();
                 config.EnableTitleSubstitution = $('#chkEnableTitleSubstitution', form).prop('checked');
                 config.TitleRawSubstitutionTable = $('#txtTitleRawSubstitutionTable', form).val();
                 config.EnableActorSubstitution = $('#chkEnableActorSubstitution', form).prop('checked');
