@@ -44,14 +44,16 @@ public static class TranslationHelper
                 nv.Add(new NameValueCollection
                 {
                     { "deepl-api-key", Configuration.DeepLApiKey },
-                    { "deepl-alt-url", Configuration.DeepLAltUrl }
+                    { "deepl-api-url", Configuration.DeepLApiUrl }
                 });
                 break;
             case TranslationEngine.OpenAi:
                 millisecondsDelay = 1000;
                 nv.Add(new NameValueCollection
                 {
-                    { "openai-api-key", Configuration.OpenAiApiKey }
+                    { "openai-api-key", Configuration.OpenAiApiKey },
+                    { "openai-api-url", Configuration.OpenAiApiUrl },
+                    { "openai-model", Configuration.OpenAiModel }
                 });
                 break;
             default:
