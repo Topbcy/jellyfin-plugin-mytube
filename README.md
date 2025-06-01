@@ -16,6 +16,7 @@
 ## About
 Built on top of [Jellyfin-Plugin-Metatube](https://github.com/metatube-community/jellyfin-plugin-metatube)
 <br>Original Author [Metatube-community](https://github.com/metatube-community)
+<br>Synchronized update on Metatube
 
 ## Features
 To add a second plugin, enabling two plugins with different configuration settings.<br>
