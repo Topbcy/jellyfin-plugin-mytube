@@ -16,6 +16,7 @@
 ## 關於
 基於 [Jellyfin-Plugin-Metatube](https://github.com/metatube-community/jellyfin-plugin-metatube)
 <br>原作者 [Metatube-community](https://github.com/metatube-community)
+<br>同步更新於 Metatube
 
 ## 功能
 新增第二個 Metatube 插件，允許使用不同配置刮削。<br>
