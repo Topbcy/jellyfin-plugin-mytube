@@ -9,6 +9,14 @@
     "imageUrl": "https://raw.githubusercontent.com/Topbcy/jellyfin-plugin-mytube/refs/heads/main/Jellyfin.Plugin.MyTube/thumb.png",
     "versions": [
       {
+        "checksum": "131ACA84E2C40E9F675E3B49CBA24090",
+        "changelog": "Auto Released by Actions",
+        "targetAbi": "10.11.0.0",
+        "sourceUrl": "https://github.com/Topbcy/jellyfin-plugin-mytube/releases/download/v2025.1021.1502.0/Jellyfin.MyTube@v2025.1021.1502.0.zip",
+        "timestamp": "2025-10-21T02:00:35Z",
+        "version": "2025.1021.1502.0"
+      },
+      {
         "checksum": "8FD28D0B313D46CA9CEF0CB34A28BCB7",
         "changelog": "Auto Released by Actions",
         "targetAbi": "10.10.0.0",
