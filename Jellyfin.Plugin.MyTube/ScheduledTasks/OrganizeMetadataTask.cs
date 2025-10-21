@@ -62,7 +62,7 @@ public class OrganizeMetadataTask : IScheduledTask
 
         progress?.Report(0);
 
-        var items = _libraryManager.GetItemList(new InternalItemsQuery
+        var items = _libraryManager.GetItems(new InternalItemsQuery
         {
             MediaTypes = new[] { MediaType.Video },
 #if __EMBY__
