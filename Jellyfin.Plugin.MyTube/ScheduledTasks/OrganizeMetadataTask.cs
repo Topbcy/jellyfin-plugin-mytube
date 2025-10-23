@@ -7,7 +7,6 @@ using MediaBrowser.Model.Tasks;
 #if __EMBY__
 using MediaBrowser.Controller.Entities.Movies;
 using MediaBrowser.Model.Logging;
-
 #else
 using MediaBrowser.Controller.Sorting;
 using Microsoft.Extensions.Logging;
@@ -47,7 +46,11 @@ public class OrganizeMetadataTask : IScheduledTask
     {
         yield return new TaskTriggerInfo
         {
+#if __EMBY__
             Type = TaskTriggerInfo.TriggerDaily,
+#else
+            Type = TaskTriggerInfoType.DailyTrigger,
+#endif
             TimeOfDayTicks = TimeSpan.FromHours(3).Ticks
         };
     }
@@ -62,7 +65,7 @@ public class OrganizeMetadataTask : IScheduledTask
 
         progress?.Report(0);
 
-        var result = _libraryManager.QueryItems(new InternalItemsQuery
+        var items = _libraryManager.GetItemList(new InternalItemsQuery
         {
             MediaTypes = new[] { MediaType.Video },
 #if __EMBY__
@@ -72,8 +75,7 @@ public class OrganizeMetadataTask : IScheduledTask
             HasAnyProviderId = new Dictionary<string, string> { { Plugin.Instance.Name, string.Empty } },
             IncludeItemTypes = new[] { BaseItemKind.Movie }
 #endif
-        });
-        var items = result.Items.ToList();
+        }).ToList();
 
         foreach (var (idx, item) in items.WithIndex())
         {
