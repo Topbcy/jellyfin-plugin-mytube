@@ -7,7 +7,6 @@ using MediaBrowser.Model.Tasks;
 #if __EMBY__
 using MediaBrowser.Controller.Entities.Movies;
 using MediaBrowser.Model.Logging;
-
 #else
 using Microsoft.Extensions.Logging;
 using Jellyfin.Data.Enums;
@@ -57,7 +56,11 @@ public class GenerateTrailersTask : IScheduledTask
     {
         yield return new TaskTriggerInfo
         {
+#if __EMBY__
             Type = TaskTriggerInfo.TriggerDaily,
+#else
+            Type = TaskTriggerInfoType.DailyTrigger,
+#endif
             TimeOfDayTicks = TimeSpan.FromHours(1).Ticks
         };
     }
@@ -76,7 +79,7 @@ public class GenerateTrailersTask : IScheduledTask
 
         progress?.Report(0);
 
-        var result = _libraryManager.QueryItems(new InternalItemsQuery
+        var items = _libraryManager.GetItemList(new InternalItemsQuery
         {
             MediaTypes = new[] { MediaType.Video },
 #if __EMBY__
@@ -86,8 +89,7 @@ public class GenerateTrailersTask : IScheduledTask
             HasAnyProviderId = new Dictionary<string, string> { { Plugin.Instance.Name, string.Empty } },
             IncludeItemTypes = new[] { BaseItemKind.Movie }
 #endif
-        });
-        var items = result.Items.ToList();
+        }).ToList();
 
         foreach (var (idx, item) in items.WithIndex())
         {
