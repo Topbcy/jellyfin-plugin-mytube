@@ -30,7 +30,11 @@ public class Plugin : BasePlugin<PluginConfiguration>, IHasWebPages
     }
 #endif
 
-    public override string Name => "MyTube";
+    public const string ProviderName = "MyTube";
+
+    public const string ProviderId = "MyTube";
+
+    public override string Name => ProviderName;
 
     public override string Description => "MyTube Plugin for Jellyfin/Emby";
 
