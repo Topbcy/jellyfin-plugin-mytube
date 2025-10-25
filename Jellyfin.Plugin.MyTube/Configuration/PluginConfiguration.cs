@@ -14,7 +14,7 @@ namespace Jellyfin.Plugin.MyTube.Configuration;
 #if __EMBY__
 public class PluginConfiguration : EditableOptionsBase
 {
-    public override string EditorTitle => Plugin.Instance.Name;
+    public override string EditorTitle => Plugin.ProviderName;
 #else
 public class PluginConfiguration : BasePluginConfiguration
 {
@@ -161,6 +161,13 @@ public class PluginConfiguration : BasePluginConfiguration
     [VisibleCondition(nameof(TranslationEngine), ValueCondition.IsEqual, TranslationEngine.Google)]
 #endif
     public string GoogleApiKey { get; set; } = string.Empty;
+
+#if __EMBY__
+    [DisplayName("Google api url")]
+    [Description("Custom Google translate api url. (optional)")]
+    [VisibleCondition(nameof(TranslationEngine), ValueCondition.IsEqual, TranslationEngine.Google)]
+#endif
+    public string GoogleApiUrl { get; set; } = string.Empty;
 
 #if __EMBY__
     [DisplayName("DeepL api key")]
