@@ -28,12 +28,6 @@ To add a second plugin, enabling two plugins with different configuration settin
 <br> 3. Repository URL: https://raw.githubusercontent.com/Topbcy/jellyfin-plugin-mytube/refs/heads/main/manifest.json
 <br> 4. Find "MyTube" under the plugin directory and click Install.
 <br> 5. Restart the Jellyfin.</br></br>
-- Emby
-<br> 1. Download the latest MyTube plugin from "Releases"
-<br> 2. Extract the MyTube.dll file.
-<br> 3. Copy the dll file into the Emby plugins directory.
-<br> 4. Restart the Emby.
-<br>_Note: Future plugin updates for Emby will be automatically handled in the background via scheduled tasks._
 
 
 ## Platforms
