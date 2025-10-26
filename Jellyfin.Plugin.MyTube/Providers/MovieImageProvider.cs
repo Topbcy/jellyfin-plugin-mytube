@@ -1,345 +1,102 @@
-using System.Text;
-using Jellyfin.Plugin.MyTube.Configuration;
 using Jellyfin.Plugin.MyTube.Extensions;
-using Jellyfin.Plugin.MyTube.Metadata;
-using Jellyfin.Plugin.MyTube.Translation;
 using MediaBrowser.Controller.Entities;
 using MediaBrowser.Controller.Entities.Movies;
 using MediaBrowser.Controller.Providers;
-using MediaBrowser.Model.Providers;
-using MovieInfo = MediaBrowser.Controller.Providers.MovieInfo;
-#if __EMBY__
-using MediaBrowser.Model.Logging;
-using MediaBrowser.Model.Configuration;
 using MediaBrowser.Model.Entities;
+using MediaBrowser.Model.Providers;
+#if __EMBY__
+using MediaBrowser.Model.Configuration;
+using MediaBrowser.Model.Logging;
 
 #else
-using Jellyfin.Data.Enums;
 using Microsoft.Extensions.Logging;
 #endif
 
 namespace Jellyfin.Plugin.MyTube.Providers;
 
-#if __EMBY__
-public class MovieProvider : BaseProvider, IRemoteMetadataProvider<Movie, MovieInfo>, IHasOrder, IHasMetadataFeatures
-#else
-public class MovieProvider : BaseProvider, IRemoteMetadataProvider<Movie, MovieInfo>, IHasOrder
-#endif
+public class MovieImageProvider : BaseProvider, IRemoteImageProvider, IHasOrder
 {
-    private const string AvBase = "AVBASE";
-    private const string Gfriends = "Gfriends";
-    private const string Rating = "JP-18+";
-
-    private static readonly string[] AvBaseSupportedProviderNames = { "DUGA", "FANZA", "Getchu", "MGS" };
-
 #if __EMBY__
-    public MetadataFeatures[] Features => new[]
-        { MetadataFeatures.Collections, MetadataFeatures.Adult, MetadataFeatures.RequiredSetup };
-
-    public MovieProvider(ILogManager logManager) : base(logManager.CreateLogger<MovieProvider>())
+    public MovieImageProvider(ILogManager logManager) : base(logManager.CreateLogger<MovieImageProvider>())
 #else
-    public MovieProvider(ILogger<MovieProvider> logger) : base(logger)
+    public MovieImageProvider(ILogger<MovieImageProvider> logger) : base(logger)
 #endif
     {
     }
 
-    public async Task<MetadataResult<Movie>> GetMetadata(MovieInfo info,
+#if __EMBY__
+    public async Task<IEnumerable<RemoteImageInfo>> GetImages(BaseItem item, LibraryOptions libraryOptions,
         CancellationToken cancellationToken)
+#else
+    public async Task<IEnumerable<RemoteImageInfo>> GetImages(BaseItem item, CancellationToken cancellationToken)
+#endif
     {
-        var pid = info.GetPid(Plugin.ProviderId);
+        var pid = item.GetPid(Plugin.ProviderId);
         if (string.IsNullOrWhiteSpace(pid.Id) || string.IsNullOrWhiteSpace(pid.Provider))
-        {
-            // Search movies and pick the first result.
-            var firstResult = (await GetSearchResults(info, cancellationToken)).FirstOrDefault();
-            if (firstResult != null) pid = firstResult.GetPid(Plugin.ProviderId);
-        }
-
-        Logger.Info("Get movie info: {0}", pid.ToString());
+            return Enumerable.Empty<RemoteImageInfo>();
 
         var m = await ApiClient.GetMovieInfoAsync(pid.Provider, pid.Id, cancellationToken);
-
-        // Preserve original title.
-        var originalTitle = m.Title;
-
-        // Convert to real actor names.
-        if (Configuration.EnableRealActorNames)
-            await ConvertToRealActorNames(m, cancellationToken);
-
-        // Substitute title.
-        if (Configuration.EnableTitleSubstitution)
-            m.Title = Configuration.GetTitleSubstitutionTable().Substitute(m.Title);
-
-        // Substitute actors.
-        if (Configuration.EnableActorSubstitution)
-            m.Actors = Configuration.GetActorSubstitutionTable().Substitute(m.Actors).ToArray();
-
-        // Substitute genres.
-        if (Configuration.EnableGenreSubstitution)
-            m.Genres = Configuration.GetGenreSubstitutionTable().Substitute(m.Genres).ToArray();
-
-        // Translate movie info.
-        if (Configuration.TranslationMode != TranslationMode.Disabled)
-            await TranslateMovieInfo(m, info.MetadataLanguage, cancellationToken);
-
-        // Distinct and clean blank list
-        m.Genres = m.Genres?.Where(x => !string.IsNullOrWhiteSpace(x)).Distinct().ToArray() ?? Array.Empty<string>();
-        m.Actors = m.Actors?.Where(x => !string.IsNullOrWhiteSpace(x)).Distinct().ToArray() ?? Array.Empty<string>();
-        m.PreviewImages = m.PreviewImages?.Where(x => !string.IsNullOrWhiteSpace(x)).Distinct().ToArray() ??
-                          Array.Empty<string>();
-
-        // Build parameters.
-        var parameters = new Dictionary<string, string>
+        var images = new List<RemoteImageInfo>
         {
-            { @"{provider}", m.Provider },
-            { @"{id}", m.Id },
-            { @"{number}", m.Number },
-            { @"{title}", m.Title },
-            { @"{series}", m.Series },
-            { @"{maker}", m.Maker },
-            { @"{label}", m.Label },
-            { @"{director}", m.Director },
-            { @"{actors}", m.Actors?.Any() == true ? string.Join(' ', m.Actors) : string.Empty },
-            { @"{first_actor}", m.Actors?.FirstOrDefault() },
-            { @"{year}", $"{m.ReleaseDate:yyyy}" },
-            { @"{month}", $"{m.ReleaseDate:MM}" },
-            { @"{date}", $"{m.ReleaseDate:yyyy-MM-dd}" }
-        };
-
-        var result = new MetadataResult<Movie>
-        {
-            Item = new Movie
+            new()
             {
-                Name = RenderTemplate(
-                    Configuration.EnableTemplate
-                        ? Configuration.NameTemplate
-                        : PluginConfiguration.DefaultNameTemplate, parameters),
-                Tagline = RenderTemplate(
-                    Configuration.EnableTemplate
-                        ? Configuration.TaglineTemplate
-                        : PluginConfiguration.DefaultTaglineTemplate, parameters),
-                OriginalTitle = originalTitle,
-                Overview = m.Summary,
-                OfficialRating = Rating,
-                PremiereDate = m.ReleaseDate.GetValidDateTime(),
-                ProductionYear = m.ReleaseDate.GetValidYear(),
-                Genres = m.Genres?.Any() == true ? m.Genres : Array.Empty<string>()
+                ProviderName = Name,
+                Type = ImageType.Primary,
+                Url = ApiClient.GetPrimaryImageApiUrl(m.Provider, m.Id, pid.Position ?? -1)
             },
-            HasMetadata = true
+            new()
+            {
+                ProviderName = Name,
+                Type = ImageType.Thumb,
+                Url = ApiClient.GetThumbImageApiUrl(m.Provider, m.Id)
+            },
+            new()
+            {
+                ProviderName = Name,
+                Type = ImageType.Backdrop,
+                Url = ApiClient.GetBackdropImageApiUrl(m.Provider, m.Id)
+            }
         };
 
-        // Set provider id.
-        result.Item.SetPid(Name, m.Provider, m.Id, pid.Position);
-
-        // Set trailer url.
-        var trailerUrl = !string.IsNullOrWhiteSpace(m.PreviewVideoUrl)
-            ? m.PreviewVideoUrl
-            : m.PreviewVideoHlsUrl;
-        if (!string.IsNullOrWhiteSpace(trailerUrl))
-            result.Item.SetTrailerUrl(trailerUrl);
-
-        // Set community rating.
-        if (Configuration.EnableRatings)
-            result.Item.CommunityRating = m.Score > 0 ? (float)Math.Round(m.Score * 2, 1) : null;
-
-        // Add collection.
-        if (Configuration.EnableCollections && !string.IsNullOrWhiteSpace(m.Series))
+        foreach (var imageUrl in m.PreviewImages ?? Enumerable.Empty<string>())
         {
-            result.Item.AddCollection(m.Series);
-            Logger.Info("Add Collection for movie {0} [{1}]", pid.ToString(), m.Series);
-        }
-
-
-        // Add studio.
-        if (!string.IsNullOrWhiteSpace(m.Maker))
-            result.Item.AddStudio(m.Maker);
-
-        // Add tag (series).
-        if (!string.IsNullOrWhiteSpace(m.Series))
-            result.Item.AddTag(m.Series);
-
-        // Add tag (maker).
-        if (!string.IsNullOrWhiteSpace(m.Maker))
-            result.Item.AddTag(m.Maker);
-
-        // Add tag (label).
-        if (!string.IsNullOrWhiteSpace(m.Label))
-            result.Item.AddTag(m.Label);
-
-        // Add director.
-        if (Configuration.EnableDirectors && !string.IsNullOrWhiteSpace(m.Director))
-            result.AddPerson(new PersonInfo
+            images.Add(new RemoteImageInfo
             {
-                Name = m.Director,
-#if __EMBY__
-                Type = PersonType.Director
-#else
-                Type = PersonKind.Director
-#endif
+                ProviderName = Name,
+                Type = ImageType.Primary,
+                Url = ApiClient.GetPrimaryImageApiUrl(m.Provider, m.Id, imageUrl, pid.Position ?? -1)
             });
 
-        // Add actors.
-        foreach (var name in m.Actors ?? Enumerable.Empty<string>())
-        {
-            var actor = new PersonInfo
+            images.Add(new RemoteImageInfo
             {
-                Name = name,
-#if __EMBY__
-                Type = PersonType.Actor,
-#else
-                Type = PersonKind.Actor,
-#endif
-            };
-            await SetActorImageUrl(actor, cancellationToken);
-            result.AddPerson(actor);
+                ProviderName = Name,
+                Type = ImageType.Thumb,
+                Url = ApiClient.GetThumbImageApiUrl(m.Provider, m.Id, imageUrl)
+            });
+
+            images.Add(new RemoteImageInfo
+            {
+                ProviderName = Name,
+                Type = ImageType.Backdrop,
+                Url = ApiClient.GetBackdropImageApiUrl(m.Provider, m.Id, imageUrl)
+            });
         }
 
-        return result;
+        return images;
     }
 
-    public async Task<IEnumerable<RemoteSearchResult>> GetSearchResults(MovieInfo info,
-        CancellationToken cancellationToken)
+    public bool Supports(BaseItem item)
     {
-        var pid = info.GetPid(Plugin.ProviderId);
-
-        var searchResults = new List<MovieSearchResult>();
-        if (string.IsNullOrWhiteSpace(pid.Id) || string.IsNullOrWhiteSpace(pid.Provider))
-        {
-            // Search movie by name.
-            Logger.Info("Search for movie: {0}", info.Name);
-            searchResults.AddRange(await ApiClient.SearchMovieAsync(info.Name, pid.Provider, cancellationToken));
-        }
-        else
-        {
-            // Exact search.
-            Logger.Info("Search for movie: {0}", pid.ToString());
-            searchResults.Add(await ApiClient.GetMovieInfoAsync(pid.Provider, pid.Id,
-                pid.Update != true, cancellationToken));
-        }
-
-        if (Configuration.EnableMovieProviderFilter)
-        {
-            if (Configuration.GetMovieProviderFilter() is { } filter &&
-                filter.Any()) // Apply only if filter is not empty.
-            {
-                // Filter out mismatched results.
-                searchResults.RemoveAll(m => !filter.Contains(m.Provider, StringComparer.OrdinalIgnoreCase));
-                // Reorder results by stable sort.
-                searchResults = searchResults.OrderBy(m =>
-                    filter.FindIndex(s => s.Equals(m.Provider, StringComparison.OrdinalIgnoreCase))).ToList();
-            }
-            else
-            {
-                Logger.Warn("Movie provider filter enabled but never used");
-            }
-        }
-
-        var results = new List<RemoteSearchResult>();
-        if (!searchResults.Any())
-        {
-            Logger.Warn("Movie not found or has been filtered: {0}", pid.Id);
-            return results;
-        }
-
-        foreach (var m in searchResults)
-        {
-            var result = new RemoteSearchResult
-            {
-                Name = $"[{m.Provider}] {m.Number} {m.Title}",
-                SearchProviderName = Name,
-                PremiereDate = m.ReleaseDate.GetValidDateTime(),
-                ProductionYear = m.ReleaseDate.GetValidYear(),
-                ImageUrl = ApiClient.GetPrimaryImageApiUrl(m.Provider, m.Id, m.ThumbUrl, 1.0, true)
-            };
-            result.SetPid(Name, m.Provider, m.Id, pid.Position);
-            results.Add(result);
-        }
-
-        return results;
+        return item is Movie;
     }
 
-    private async Task SetActorImageUrl(PersonInfo actor, CancellationToken cancellationToken)
+    public IEnumerable<ImageType> GetSupportedImages(BaseItem item)
     {
-        try
+        return new List<ImageType>
         {
-            var results = await ApiClient.SearchActorAsync(actor.Name, cancellationToken);
-            if (results?.Any() != true)
-            {
-                Logger.Warn("Actor not found: {0}", actor.Name);
-                return;
-            }
-
-            // Use the first result as the primary actor selection.
-            var firstResult = results.First();
-            if (firstResult.Images?.Any() == true)
-            {
-                actor.ImageUrl = ApiClient.GetPrimaryImageApiUrl(
-                    firstResult.Provider, firstResult.Id, firstResult.Images.First(), 0.5, true);
-                actor.SetPid(Name, firstResult.Provider, firstResult.Id);
-            }
-
-            // Use the Gfriends to update the actor profile image, if any.
-            foreach (var result in results.Where(result => result.Provider == Gfriends && result.Images?.Any() == true))
-            {
-                actor.ImageUrl = ApiClient.GetPrimaryImageApiUrl(
-                    result.Provider, result.Id, result.Images.First(), 0.5, true);
-            }
-        }
-        catch (Exception e)
-        {
-            Logger.Error("Get actor image error: {0} ({1})", actor.Name, e.Message);
-        }
-    }
-
-    private async Task ConvertToRealActorNames(MovieSearchResult m, CancellationToken cancellationToken)
-    {
-        if (!AvBaseSupportedProviderNames.Contains(m.Provider, StringComparer.OrdinalIgnoreCase)) return;
-
-        try
-        {
-            var searchResults = await ApiClient.SearchMovieAsync(m.Id, AvBase, cancellationToken);
-            if (searchResults?.Any() != true)
-            {
-                Logger.Warn("Movie not found on AVBASE: {0}", m.Id);
-            }
-            else if (searchResults.Count > 1)
-            {
-                // Ignore multiple results to avoid ambiguity.
-                Logger.Warn("Multiple movies found on AVBASE: {0}", m.Id);
-            }
-            else
-            {
-                var firstResult = searchResults.First();
-                if (firstResult.Actors?.Any() == true) m.Actors = firstResult.Actors;
-            }
-        }
-        catch (Exception e)
-        {
-            Logger.Error("Convert to real actor names error: {0} ({1})", m.Number, e.Message);
-        }
-    }
-
-    private async Task TranslateMovieInfo(Metadata.MovieInfo m, string language, CancellationToken cancellationToken)
-    {
-        try
-        {
-            Logger.Info("Translate movie info language: {0} => {1}", m.Number, language);
-            await TranslationHelper.TranslateAsync(m, language, cancellationToken);
-        }
-        catch (Exception e)
-        {
-            Logger.Error("Translate error: {0}", e.Message);
-        }
-    }
-
-    private static string RenderTemplate(string template, Dictionary<string, string> parameters)
-    {
-        if (string.IsNullOrWhiteSpace(template))
-            return string.Empty;
-
-        var sb = parameters.Where(kvp => template.Contains(kvp.Key))
-            .Aggregate(new StringBuilder(template),
-                (sb, kvp) => sb.Replace(kvp.Key, kvp.Value));
-
-        return sb.ToString().Trim();
+            ImageType.Primary,
+            ImageType.Thumb,
+            ImageType.Backdrop
+        };
     }
 }
