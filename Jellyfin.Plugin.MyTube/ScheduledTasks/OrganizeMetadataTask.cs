@@ -1,43 +1,45 @@
-#if __EMBY__
-using System.Reflection;
-using System.Text.Json;
-using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 using Jellyfin.Plugin.MyTube.Extensions;
-using MediaBrowser.Common;
-using MediaBrowser.Common.Configuration;
-using MediaBrowser.Common.Net;
-using MediaBrowser.Model.IO;
-using MediaBrowser.Model.Logging;
+using MediaBrowser.Controller.Entities;
+using MediaBrowser.Controller.Library;
+using MediaBrowser.Model.Entities;
 using MediaBrowser.Model.Tasks;
-using HttpRequestOptions = MediaBrowser.Common.Net.HttpRequestOptions;
+#if __EMBY__
+using MediaBrowser.Controller.Entities.Movies;
+using MediaBrowser.Model.Logging;
+
+#else
+using MediaBrowser.Controller.Sorting;
+using Microsoft.Extensions.Logging;
+using Jellyfin.Data.Enums;
+#endif
 
 namespace Jellyfin.Plugin.MyTube.ScheduledTasks;
 
-public class UpdatePluginTask : IScheduledTask
+public class OrganizeMetadataTask : IScheduledTask
 {
-    private readonly IApplicationHost _applicationHost;
-    private readonly IApplicationPaths _applicationPaths;
-    private readonly IHttpClient _httpClient;
+    private readonly ILibraryManager _libraryManager;
     private readonly ILogger _logger;
-    private readonly IZipClient _zipClient;
 
-    public UpdatePluginTask(IApplicationHost applicationHost, IApplicationPaths applicationPaths,
-        IHttpClient httpClient, ILogManager logManager, IZipClient zipClient)
+#if __EMBY__
+    public OrganizeMetadataTask(ILogManager logManager, ILibraryManager libraryManager)
     {
-        _applicationHost = applicationHost;
-        _applicationPaths = applicationPaths;
-        _httpClient = httpClient;
-        _logger = logManager.CreateLogger<UpdatePluginTask>();
-        _zipClient = zipClient;
+        _logger = logManager.CreateLogger<OrganizeMetadataTask>();
+        _libraryManager = libraryManager;
     }
+#else
+    public OrganizeMetadataTask(ILogger<OrganizeMetadataTask> logger, ILibraryManager libraryManager)
+    {
+        _logger = logger;
+        _libraryManager = libraryManager;
+    }
+#endif
 
-    private static string CurrentVersion => Assembly.GetExecutingAssembly().GetName().Version?.ToString();
+    public string Key => $"{Plugin.ProviderName}OrganizeMetadata";
 
-    public string Key => $"{Plugin.ProviderName}UpdatePlugin";
+    public string Name => "Organize Metadata";
 
-    public string Name => "Update Plugin";
-
-    public string Description => $"Updates {Plugin.ProviderName} plugin to latest version.";
+    public string Description => $"Organizes video metadata provided by {Plugin.ProviderName} in library.";
 
     public string Category => Plugin.ProviderName;
 
@@ -45,89 +47,152 @@ public class UpdatePluginTask : IScheduledTask
     {
         yield return new TaskTriggerInfo
         {
+#if __EMBY__
             Type = TaskTriggerInfo.TriggerDaily,
-            TimeOfDayTicks = TimeSpan.FromHours(5).Ticks
+#else
+            Type = TaskTriggerInfoType.DailyTrigger,
+#endif
+            TimeOfDayTicks = TimeSpan.FromHours(3).Ticks
         };
     }
 
+#if __EMBY__
     public async Task Execute(CancellationToken cancellationToken, IProgress<double> progress)
+#else
+    public async Task ExecuteAsync(IProgress<double> progress, CancellationToken cancellationToken)
+#endif
     {
         await Task.Yield();
+
         progress?.Report(0);
 
-        try
+        var items = _libraryManager.GetItemList(new InternalItemsQuery
         {
-            var apiResult = JsonSerializer.Deserialize<ApiResponseInfo>(await _httpClient.Get(new HttpRequestOptions
+            MediaTypes = new[] { MediaType.Video },
+#if __EMBY__
+            HasAnyProviderId = new[] { Plugin.ProviderId },
+            IncludeItemTypes = new[] { nameof(Movie) },
+#else
+            HasAnyProviderId = new Dictionary<string, string> { { Plugin.ProviderId, string.Empty } },
+            IncludeItemTypes = new[] { BaseItemKind.Movie }
+#endif
+        }).ToList();
+
+        foreach (var (idx, item) in items.WithIndex())
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            progress?.Report((double)idx / items.Count * 100);
+
+            var genres = item.Genres?.ToList() ?? new List<string>();
+
+            try
             {
-                Url = "https://api.github.com/repos/metatube-community/jellyfin-plugin-metatube/releases/latest",
-                CancellationToken = cancellationToken,
-                AcceptHeader = "application/json",
-                EnableDefaultUserAgent = true
-            }).ConfigureAwait(false));
-
-            var currentVersion = ParseVersion(CurrentVersion);
-            var remoteVersion = ParseVersion(apiResult?.TagName);
-
-            if (currentVersion.CompareTo(remoteVersion) < 0)
-            {
-                _logger.Info("Found new plugin version: {0}", remoteVersion);
-
-                var url = apiResult?.Assets
-                    .Where(asset => asset.Name.StartsWith("Emby") && asset.Name.EndsWith(".zip")).ToArray()
-                    .FirstOrDefault()
-                    ?.BrowserDownloadUrl;
-                if (!Uri.IsWellFormedUriString(url, UriKind.Absolute))
-                    throw new Exception("Invalid download url");
-
-                var zipStream = await _httpClient.Get(new HttpRequestOptions
+                switch (HasEmbeddedChineseSubtitle(item.FileNameWithoutExtension) ||
+                        HasExternalChineseSubtitle(item.Path))
                 {
-                    Url = url,
-                    CancellationToken = cancellationToken,
-                    EnableDefaultUserAgent = true,
-                    Progress = progress
-                }).ConfigureAwait(false);
-
-                _zipClient.ExtractAllFromZip(zipStream, _applicationPaths.PluginsPath, true);
-
-                _logger.Info("Plugin update complete");
-
-                _applicationHost.NotifyPendingRestart();
+                    // Add `ChineseSubtitle` genre.
+                    case true when !genres.Contains(ChineseSubtitle):
+                    {
+                        genres.Add(ChineseSubtitle);
+                        if (Plugin.Instance.Configuration.EnableBadges)
+                            await SetPrimaryImage(item, Plugin.Instance.Configuration.BadgeUrl, cancellationToken);
+                        break;
+                    }
+                    // Remove `ChineseSubtitle` genre.
+                    case false when genres.Contains(ChineseSubtitle):
+                    {
+                        genres.RemoveAll(s => s.Equals(ChineseSubtitle));
+                        if (Plugin.Instance.Configuration.EnableBadges)
+                            await SetPrimaryImage(item, string.Empty, cancellationToken);
+                        break;
+                    }
+                }
             }
-            else
+            catch (Exception e)
             {
-                _logger.Info("No need to update");
+                _logger.Error("Update ChineseSubtitle for video {0}: {1}", item.Name, e.Message);
             }
-        }
-        catch (Exception e)
-        {
-            _logger.Error("Update error: {0}", e.Message);
+
+            // Remove duplicates.
+            var orderedGenres =
+                (Plugin.Instance.Configuration.EnableGenreSubstitution
+                    // Substitute genres.
+                    ? Plugin.Instance.Configuration.GetGenreSubstitutionTable().Substitute(genres)
+                    : genres).Distinct().OrderByString(genre => genre).ToList();
+
+            // Skip updating item if equal.
+            if (!orderedGenres.Any() ||
+                (item.Genres?.SequenceEqual(orderedGenres, StringComparer.OrdinalIgnoreCase)).GetValueOrDefault(false))
+                continue;
+
+            item.Genres = orderedGenres.ToArray();
+
+            _logger.Info("Organize metadata for video: {0}", item.Name);
+
+#if __EMBY__
+            _libraryManager.UpdateItem(item, item, ItemUpdateType.MetadataEdit, null);
+#else
+            await _libraryManager
+                .UpdateItemAsync(item, item, ItemUpdateType.MetadataEdit, cancellationToken)
+                .ConfigureAwait(false);
+#endif
         }
 
         progress?.Report(100);
     }
 
-    private static Version ParseVersion(string v)
+    #region Helper
+
+    private const string ChineseSubtitle = "中文字幕";
+
+    private static bool HasTag(string filename, string tag)
     {
-        return new Version(v.StartsWith("v") ? v[1..] : v);
+        var r = new Regex(@"[-_\s]", RegexOptions.Compiled);
+        return r.Split(filename).Contains(tag, StringComparer.OrdinalIgnoreCase);
     }
 
-    private class ApiResponseInfo
+    private static bool HasTag(string filename, params string[] tags)
     {
-        [JsonPropertyName("tag_name")]
-        public string TagName { get; set; }
-
-        [JsonPropertyName("assets")]
-        public ApiAssetInfo[] Assets { get; set; }
+        return tags.Any(tag => HasTag(filename, tag));
     }
 
-    private class ApiAssetInfo
+    private static bool HasEmbeddedChineseSubtitle(string filename)
     {
-        [JsonPropertyName("name")]
-        public string Name { get; set; }
+        if (string.IsNullOrWhiteSpace(filename))
+            return false;
 
-        [JsonPropertyName("browser_download_url")]
-        public string BrowserDownloadUrl { get; set; }
+        return filename.Contains(ChineseSubtitle) || HasTag(filename, "C", "UC", "ch");
     }
+
+    private static bool HasExternalChineseSubtitle(string path)
+    {
+        return HasExternalChineseSubtitle(Path.GetFileNameWithoutExtension(path),
+            Directory.GetParent(path)?.GetFiles().Select(info => info.Name));
+    }
+
+    private static bool HasExternalChineseSubtitle(string basename, IEnumerable<string> files)
+    {
+        var r = new Regex(@"\.(ch[ist]|zho?(-(cn|hk|sg|tw))?)\.(ass|srt|ssa|smi|sub|idx|psb|vtt)$",
+            RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.Compiled);
+        return files.Any(name => r.IsMatch(name) &&
+                                 r.Replace(name, string.Empty)
+                                     .Equals(basename, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static async Task SetPrimaryImage(BaseItem item, string badge, CancellationToken cancellationToken)
+    {
+        var pid = item.GetPid(Plugin.ProviderId);
+        if (string.IsNullOrWhiteSpace(pid.Id) || string.IsNullOrWhiteSpace(pid.Provider))
+            return;
+
+        var m = await ApiClient.GetMovieInfoAsync(pid.Provider, pid.Id, cancellationToken);
+        // Set first primary image.
+        item.SetImage(new ItemImageInfo
+        {
+            Path = ApiClient.GetPrimaryImageApiUrl(m.Provider, m.Id, pid.Position ?? -1, badge),
+            Type = ImageType.Primary
+        }, 0);
+    }
+
+    #endregion
 }
-
-#endif
