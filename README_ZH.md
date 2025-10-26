@@ -29,13 +29,6 @@
 <br> 3. 資源庫網址: https://raw.githubusercontent.com/Topbcy/jellyfin-plugin-mytube/refs/heads/main/manifest.json
 <br> 4. 找到 "MyTube" 擴充功能/目錄，點擊 "安裝"
 <br> 5. 重啟 Jellyfin</br></br>
-- Emby
-<br> 1. 從 "Releases" 下載最新 MyTube
-<br> 2. 解壓縮 MyTube.dll 檔案
-<br> 3. 將 MyTube.dll 檔案複製到 Emby 的插件目錄中
-<br> 4. 重啟 Emby.
-<br>_注意：未來的 Emby 插件更新將通過排程任務在背景自動處理。_
-
 
 ## 平台
 [![Jellyfin](https://img.shields.io/static/v1?color=%2300A4DC&style=for-the-badge&label=Jellyfin&logo=jellyfin&message=10.10.x)](https://jellyfin.org/)
