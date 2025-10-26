@@ -29,7 +29,6 @@ To add a second plugin, enabling two plugins with different configuration settin
 <br> 4. Find "MyTube" under the plugin directory and click Install.
 <br> 5. Restart the Jellyfin.</br></br>
 
-
 ## Platforms
 [![Jellyfin](https://img.shields.io/static/v1?color=%2300A4DC&style=for-the-badge&label=Jellyfin&logo=jellyfin&message=10.10.x)](https://jellyfin.org/)
 [![Emby](https://img.shields.io/static/v1?color=%2352B54B&style=for-the-badge&label=Emby&logo=emby&message=4.8.x)](https://emby.media/)
