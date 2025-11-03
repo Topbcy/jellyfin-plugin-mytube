@@ -347,7 +347,7 @@ public class MovieProvider : BaseProvider, IRemoteMetadataProvider<Movie, MovieI
                 return string.Empty;
 
             s = s.ToLowerInvariant();
-            s = Regex.Replace(s, @"[\s\[\]\(\)????]", "");
+            s = Regex.Replace(s, @"[\s\[\]\(\)¡i¡j¡]¡^]", "");
             return s.Trim();
         }
     }
