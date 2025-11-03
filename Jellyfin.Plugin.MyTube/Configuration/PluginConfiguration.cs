@@ -39,7 +39,7 @@ public class PluginConfiguration : BasePluginConfiguration
     public bool EnableAutoUpdate { get; set; } = true;
 #endif
 
-#if __EMBY_
+#if __EMBY__
     [DisplayName("Enable collections")]
     [Description("Automatically create collections by series.")]
 #endif
