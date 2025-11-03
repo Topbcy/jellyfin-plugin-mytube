@@ -1,8 +1,8 @@
 using System.Text;
+using System.Text.RegularExpressions;
 using Jellyfin.Plugin.MyTube.Configuration;
 using Jellyfin.Plugin.MyTube.Extensions;
-using Jellyfin.Plugin.MyTube.Metadata;
-using Jellyfin.Plugin.MyTube.Translation;
+using Jellyfin.Plugin.MyTube.Helpers;
 using Jellyfin.Plugin.MyTube.Metadata;
 using Jellyfin.Plugin.MyTube.Translation;
 using MediaBrowser.Controller.Entities;
@@ -149,7 +149,6 @@ public class MovieProvider : BaseProvider, IRemoteMetadataProvider<Movie, MovieI
             result.Item.AddCollection(m.Series);
             Logger.Info("Add Collection for movie {0} [{1}]", pid.ToString(), m.Series);
         }
-
 
         // Add studio.
         if (!string.IsNullOrWhiteSpace(m.Maker))
@@ -320,7 +319,8 @@ public class MovieProvider : BaseProvider, IRemoteMetadataProvider<Movie, MovieI
                 }
             }
 
-            Logger.Warn("No matching movie found on AVBASE for {0}", m.Id);        }
+            Logger.Warn("No matching movie found on AVBASE for {0}", m.Id);
+        }
         catch (Exception e)
         {
             Logger.Error("Convert to real actor names error: {0} ({1})", m.Number, e.Message);
@@ -347,10 +347,11 @@ public class MovieProvider : BaseProvider, IRemoteMetadataProvider<Movie, MovieI
                 return string.Empty;
 
             s = s.ToLowerInvariant();
-            s = Regex.Replace(s, @"[\s\[\]\(\)¡i¡j¡]¡^]", "");
+            s = Regex.Replace(s, @"[\s\[\]\(\)????]", "");
             return s.Trim();
         }
     }
+
     private async Task TranslateMovieInfo(Metadata.MovieInfo m, string language, CancellationToken cancellationToken)
     {
         try
