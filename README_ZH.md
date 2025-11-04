@@ -31,7 +31,7 @@
 <br> 5. 重啟 Jellyfin</br></br>
 
 ## 平台
-[![Jellyfin](https://img.shields.io/static/v1?color=%2300A4DC&style=for-the-badge&label=Jellyfin&logo=jellyfin&message=10.10.x)](https://jellyfin.org/)
+[![Jellyfin](https://img.shields.io/static/v1?color=%2300A4DC&style=for-the-badge&label=Jellyfin&logo=jellyfin&message=10.11.x)](https://jellyfin.org/)
 <br>_注意：此專案僅支援穩定版本。_
 
 
