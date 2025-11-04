@@ -30,7 +30,7 @@ To add a second plugin, enabling two plugins with different configuration settin
 <br> 5. Restart the Jellyfin.</br></br>
 
 ## Platforms
-[![Jellyfin](https://img.shields.io/static/v1?color=%2300A4DC&style=for-the-badge&label=Jellyfin&logo=jellyfin&message=10.10.x)](https://jellyfin.org/)
+[![Jellyfin](https://img.shields.io/static/v1?color=%2300A4DC&style=for-the-badge&label=Jellyfin&logo=jellyfin&message=10.11.x)](https://jellyfin.org/)
 <br>_NOTE: This project will only support stable versions._
 
 
